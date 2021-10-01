@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 const { token } = require('morgan');
 const User = require('../models/User');
 
-
+// Función para validar los tokens recibidos en las rutas protegidas
 const validar_jwt = async (req, res, next) => {
+    // Se almacena el token
     const token = req.header('x-token');
 
     //Se verficia si viene el token en los headers
@@ -17,6 +18,7 @@ const validar_jwt = async (req, res, next) => {
     //Si existe token
 
     try {
+        // Se decodifica el token para obtener el id 
         const {id} = jwt.verify(token, process.env.SECRET)
         //console.log(id)
         if(!id){
@@ -35,10 +37,10 @@ const validar_jwt = async (req, res, next) => {
                 msg: 'Token Inválido (no existe el usuario)' 
             });
          }
-         
+        // Se añaden los datos del usuario a la petición.
          req.usuario = user;
          
-
+        // Continuar al siguiente middleware
          next();
 
 

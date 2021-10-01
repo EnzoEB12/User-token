@@ -1,9 +1,11 @@
 const ctrlHome = {};
+// Requerimos el modelo de datos de usuario 
 const User = require('../models/User');
+
 const {generar_jwt} = require('../helpers/generar_jwt')
 
 
-// Devuelve todos los usuarios de la colección
+// Devuelve todos los usuarios activos de la colección
 ctrlHome.rutaGet = async (req, res) => {
     const users = await User.find({ activo: true }) // consulta para todos los documentos
     
@@ -15,7 +17,9 @@ ctrlHome.rutaGet = async (req, res) => {
 
 // Controlador que almacena un nuevo usuario
 ctrlHome.rutaPost = async (req, res) => {
+     // Desestructuramos la información recibida del cliente
     const { username, password,role } = req.body;
+    // Se alamacena el nuevo usuario en la base de datos
     const user = new User({username, password,role});
     await user.save() 
 
@@ -43,7 +47,7 @@ ctrlHome.rutaLogin = async (req, res) => {
     }
 
     //Si lo encuentra
-
+    // Generar el token
     const token = await generar_jwt(user.id); 
     
     res.json({

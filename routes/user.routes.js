@@ -1,16 +1,20 @@
+// Utilizamos el método Router de la librería express
 const router = require('express').Router();
+
 const {validar_jwt} = require('../middlewares/validar_jwt')
 const {verficarAdmin} = require('../middlewares/validar_roles')
 const { body } = require('express-validator');
 const { validarCampos } = require ('../helpers/validar_campos');
 const { siExisteRol, siExisteEmail } = require ('../middlewares/Validaciones');
 
+
+// Requerimos los controladores (funciones que contendrán la lógica del endpoint)
  const {
      rutaGet, rutaPost, rutaLogin, rutaPut, rutaDelete, deleteUser
  } = require('../controllers/users.controllers')
 
 
-//  Ruta que devuelve todos los usuarios
+//  Ruta para obtener todos los usuarios
 router.get('/api/get-user', 
 validar_jwt,
 verficarAdmin,
@@ -47,12 +51,15 @@ body('role', 'El rol no es valido').custom(siExisteRol),
 body('id','La id no es valida').isMongoId(),
 validarCampos, rutaPut)
 
+// Ruta para eliminar un usuario - actualiza el estado
 router.put('/api/desactivar-user/:id',
 body('id','La id no es valida').isMongoId(), 
 validar_jwt,
 verficarAdmin,
 deleteUser)
 
+
+// Ruta para eliminar un usuario
 router.delete('/api/delete-user/:id',body('id','La id no es valida').isMongoId(), 
 validar_jwt,
 verficarAdmin,
